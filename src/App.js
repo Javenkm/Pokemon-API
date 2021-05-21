@@ -2,25 +2,27 @@ import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import Pokemon from "./components/Pokemon"
 import './App.css';
+import axios from 'axios';
 
 
 function App() {
 
   const [ pokemon, setPokemon ] = useState({});
 
-  // useEffect(() => {
-  //   fetch('https://pokeapi.co/api/v2/pokemon/')
+  const getPokemon = () => {
+    axios.get("https://pokeapi.co/api/v2/pokemon?limit=807")
+      .then(res => {
+        setPokemon(res.data.results)
+      })
+  }
+
+
+  // const getPokemon = () => {
+  //   fetch("https://pokeapi.co/api/v2/pokemon?limit=807")
   //     .then(res => res.json())
   //     .then(res => setPokemon(res.results))
-  // }, []);
-
-
-  const getPokemon = () => {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=807")
-      .then(res => res.json())
-      .then(res => setPokemon(res.results))
-      .catch(err => console.log(err))
-  }
+  //     .catch(err => console.log(err))
+  // }
 
   return (
     <div className="parent-div">
@@ -32,12 +34,13 @@ function App() {
           Catch 'Em All
         </button>
       </div>
-      { pokemon.map((p, i) => {
+      { pokemon ?
+        pokemon.map((p, i) => {
           return <Pokemon
                     pokemon = {p}
                     key = {i}
                   />
-        })
+        }) : <div></div>
       }
     </div>
   );
